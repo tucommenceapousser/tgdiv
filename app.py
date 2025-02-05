@@ -55,4 +55,4 @@ def send_message():
 # Démarrer l'application web dans un thread
 if __name__ == "__main__":
     threading.Thread(target=start_telegram_clients).start()
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=False, host="0.0.0.0", use_reloader=False)
