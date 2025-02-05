@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion Multi-Telegram</title>
+    <title>Telegram Bot Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <h1>Gestion de Comptes Telegram</h1>
-    <form action="/send_message" method="POST">
-        <label for="message">Message à envoyer :</label>
-        <textarea id="message" name="message" rows="4" cols="50"></textarea><br><br>
-        <input type="submit" value="Envoyer le message">
-    </form>
+    <div class="container">
+        <h1>Telegram Bot Manager</h1>
+        
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <form action="{{ url_for('send_message') }}" method="post">
+            <textarea name="message" placeholder="Tapez votre message ici..." required></textarea>
+            <button type="submit">Envoyer le message</button>
+        </form>
+    </div>
 </body>
 </html>
