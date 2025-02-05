@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, flash
 from telethon import TelegramClient
 import asyncio
 import threading
@@ -15,6 +15,7 @@ accounts = ["+33745734115", "+33759014400"]
 
 # Créer une instance Flask
 app = Flask(__name__)
+app.secret_key = 'supersecretkey'  # Pour les flash messages
 
 # Fonction pour démarrer la connexion à Telegram dans un thread séparé
 def start_telegram_clients():
@@ -47,10 +48,15 @@ def send_message():
             await client.send_message('me', message)
         return "Message envoyé avec succès à tous les comptes!"
 
-    # Exécute l'envoi du message dans un thread séparé
-    loop = asyncio.new_event_loop()
-    result = loop.run_until_complete(send_messages())
-    return result
+    try:
+        # Exécute l'envoi du message dans un thread séparé
+        loop = asyncio.new_event_loop()
+        result = loop.run_until_complete(send_messages())
+        flash(result, 'success')
+    except Exception as e:
+        flash(f"Erreur: {str(e)}", 'error')
+
+    return redirect(url_for('index'))
 
 # Démarrer l'application web dans un thread
 if __name__ == "__main__":
